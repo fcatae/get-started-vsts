@@ -34,5 +34,15 @@ namespace ConsoleVsts
             string workType = "Task";
             await client.CreateWorkItemAsync(patchDocument, project, workType);
         }
+
+        public async Task GetItemAsync(int id, string vstsAccount, string project, string personalAccessToken)
+        {
+            var accountUri = new Uri(vstsAccount);
+            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
+
+            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+
+            var t = await client.GetWorkItemAsync(id);
+        }
     }
 }
