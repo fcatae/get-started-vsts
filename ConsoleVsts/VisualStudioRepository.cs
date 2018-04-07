@@ -13,12 +13,29 @@ namespace ConsoleVsts
 {
     class VisualStudioRepository
     {
-        public async Task CreateAsync(string vstsAccount, string project, string personalAccessToken)
+        private readonly string _account;
+        private readonly string _project;
+        private readonly VssConnection _connection;
+
+        public VisualStudioRepository(string vstsAccount, string project, string personalAccessToken)
         {
             var accountUri = new Uri(vstsAccount);
             var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
 
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            this._account = vstsAccount;
+            this._project = project;
+            this._connection = connection;
+        }
+
+        T GetClient<T>()
+            where T: VssHttpClientBase
+        {
+            return _connection.GetClient<T>();
+        }
+
+        public async Task CreateAsync()
+        {
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var patchDocument = new JsonPatchDocument();
 
@@ -41,71 +58,56 @@ namespace ConsoleVsts
 
 
             string workType = "Bug";
-            var t = await client.CreateWorkItemAsync(patchDocument, project, workType);
+            var t = await client.CreateWorkItemAsync(patchDocument, _project, workType);
         }
 
-        public async Task<WorkItem> GetItemAsync(int id, string vstsAccount, string project, string personalAccessToken)
+        public async Task<WorkItem> GetItemAsync(int id)
         {
-            var accountUri = new Uri(vstsAccount);
-            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var t = await client.GetWorkItemAsync(id);
 
             return t;
         }
 
-        public async Task GetDeepItemAsync(int id, string vstsAccount, string project, string personalAccessToken)
+        public async Task GetDeepItemAsync(int id)
         {
-            var accountUri = new Uri(vstsAccount);
-            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var t = await client.GetWorkItemAsync(id, expand: WorkItemExpand.Relations);
         }
 
-        public async Task DiscoverTypesAsync(string vstsAccount, string project, string personalAccessToken)
+        public async Task DiscoverTypesAsync()
         {
-            var accountUri = new Uri(vstsAccount);
-            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var rels = await client.GetRelationTypesAsync();
-            var cats = await client.GetWorkItemTypeCategoriesAsync(project);
+            var cats = await client.GetWorkItemTypeCategoriesAsync(_project);
         }
 
-        public async Task QueryItemsAsync(string vstsAccount, string project, string personalAccessToken)
+        public async Task QueryItemsAsync()
         {
             var wiql = new Wiql()
             {
                 Query = "Select [State], [Title] " +
                     "From WorkItems " +
                     "Where [Work Item Type] = 'Bug' " +
-                    "And [System.TeamProject] = '" + project + "' " +
+                    "And [System.TeamProject] = '" + _project + "' " +
                     "And [System.State] <> 'Closed' " +
                     "Order By [State] Asc, [Changed Date] Desc"
             };
 
-            var accountUri = new Uri(vstsAccount);
-            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var result = await client.QueryByWiqlAsync(wiql);
         }
 
-        public async Task AddItemRelationAsync(int parentId, string vstsAccount, string project, string personalAccessToken)
+        public async Task AddItemRelationAsync(int parentId)
         {
-            var parent = await GetItemAsync(parentId, vstsAccount, project, personalAccessToken);
+            var parent = await GetItemAsync(parentId);
             string parentUrl = ((ReferenceLink)parent.Links.Links["self"]).Href;
 
-            var accountUri = new Uri(vstsAccount);
-            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var patchDocument = new JsonPatchDocument();
 
@@ -131,15 +133,12 @@ namespace ConsoleVsts
             );
 
             string workType = "Task";
-            var t = await client.CreateWorkItemAsync(patchDocument, project, workType);
+            var t = await client.CreateWorkItemAsync(patchDocument, _project, workType);
         }
         
-        public async Task UpdateItemAsync(int id, string vstsAccount, string project, string personalAccessToken)
+        public async Task UpdateItemAsync(int id)
         {
-            var accountUri = new Uri(vstsAccount);
-            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
-            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+            var client = GetClient<WorkItemTrackingHttpClient>();
 
             var patchDocument = new JsonPatchDocument();
 

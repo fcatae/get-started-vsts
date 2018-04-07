@@ -8,19 +8,19 @@ namespace ConsoleVsts
         {
             Console.WriteLine("Hello World!");
 
-            var vsts = new VisualStudioRepository();
+            var vsts = new VisualStudioRepository(args[0], args[1], args[2]);
 
-            //vsts.CreateAsync(args[0], args[1], args[2]).Wait();
+            //vsts.CreateAsync().Wait();
 
-            //vsts.GetItemAsync(1, args[0], args[1], args[2]).Wait();
+            //vsts.GetItemAsync(1).Wait();
 
-            //vsts.AddItemRelationAsync(1, args[0], args[1], args[2]).Wait();
+            //vsts.AddItemRelationAsync(1).Wait();
 
-            //vsts.DiscoverTypesAsync(args[0], args[1], args[2]).Wait();
+            //vsts.DiscoverTypesAsync().Wait();
 
-            //vsts.QueryItemsAsync(args[0], args[1], args[2]).Wait();
+            //vsts.QueryItemsAsync().Wait();
 
-            vsts.UpdateItemAsync(2, args[0], args[1], args[2]).Wait();
+            vsts.UpdateItemAsync(2).Wait();
         }
     }
 }
