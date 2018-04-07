@@ -64,5 +64,25 @@ namespace ConsoleVsts
             var rels = await client.GetRelationTypesAsync();
             var cats = await client.GetWorkItemTypeCategoriesAsync(project);
         }
+
+        public async Task QueryItemsAsync(string vstsAccount, string project, string personalAccessToken)
+        {
+            var wiql = new Wiql()
+            {
+                Query = "Select [State], [Title] " +
+                    "From WorkItems " +
+                    "Where [Work Item Type] = 'Bug' " +
+                    "And [System.TeamProject] = '" + project + "' " +
+                    "And [System.State] <> 'Closed' " +
+                    "Order By [State] Asc, [Changed Date] Desc"
+            };
+
+            var accountUri = new Uri(vstsAccount);
+            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
+
+            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+
+            var result = await client.QueryByWiqlAsync(wiql);
+        }
     }
 }

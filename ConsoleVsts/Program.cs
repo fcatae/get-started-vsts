@@ -12,7 +12,10 @@ namespace ConsoleVsts
 
             //vsts.CreateAsync(args[0], args[1], args[2]).Wait();
 
-            vsts.DiscoverTypesAsync(args[0], args[1], args[2]).Wait();
+            //vsts.GetItemAsync(1, args[0], args[1], args[2]).Wait();
+            //vsts.DiscoverTypesAsync(args[0], args[1], args[2]).Wait();
+
+            vsts.QueryItemsAsync(args[0], args[1], args[2]).Wait();
         }
     }
 }
