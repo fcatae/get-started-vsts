@@ -23,7 +23,9 @@ namespace ConsoleVsts
 
             //vsts.UpdateItemAsync(2).Wait();
 
-            vsts.AddComment(1).Wait();
+            //vsts.AddComment(1).Wait();
+
+            vsts.GetItemTemplate().Wait();
         }
     }
 }

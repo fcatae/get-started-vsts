@@ -178,5 +178,13 @@ namespace ConsoleVsts
 
             var t = await client.UpdateWorkItemAsync(patchDocument, id);
         }
+
+
+        public async Task GetItemTemplate()
+        {
+            var client = GetClient<WorkItemTrackingHttpClient>();
+
+            var t = await client.GetWorkItemTemplateAsync(_project, "Task");
+        }
     }
 }
