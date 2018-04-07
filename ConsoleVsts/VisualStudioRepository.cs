@@ -13,7 +13,6 @@ namespace ConsoleVsts
 {
     class VisualStudioRepository
     {
-        private readonly string _account;
         private readonly string _project;
         private readonly VssConnection _connection;
 
@@ -22,7 +21,6 @@ namespace ConsoleVsts
             var accountUri = new Uri(vstsAccount);
             var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
 
-            this._account = vstsAccount;
             this._project = project;
             this._connection = connection;
         }
