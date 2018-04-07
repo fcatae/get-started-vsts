@@ -25,7 +25,10 @@ namespace ConsoleVsts
 
             //vsts.AddComment(1).Wait();
 
-            vsts.GetItemTemplate().Wait();
+            //vsts.GetItemTemplate().Wait();
+
+            vsts.GetCurrentProfile().Wait();
+            
         }
     }
 }

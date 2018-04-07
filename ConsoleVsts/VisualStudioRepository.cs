@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.Services.Common;
 using Microsoft.VisualStudio.Services.WebApi;
 using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
+using Microsoft.VisualStudio.Services.Profile;
+using Microsoft.VisualStudio.Services.Profile.Client;
 
 namespace ConsoleVsts
 {
@@ -185,6 +187,20 @@ namespace ConsoleVsts
             var client = GetClient<WorkItemTrackingHttpClient>();
 
             var t = await client.GetWorkItemTemplateAsync(_project, "Task");
+        }
+
+        public async Task GetCurrentProfile()
+        {
+            var client = GetClient<ProfileHttpClient>();
+
+            var name = await client.GetDisplayNameAsync(null);
+            //var avatar = await client.GetAvatarAsync(AvatarSize.Large);
+            //System.IO.File.WriteAllBytes("ex.png", avatar.Value);
+            await client.
+            var attrib = await client.GetAttributesAsync(new AttributesQueryContext(AttributesScope.Core));
+            var profile = await client.GetProfileAsync(new ProfileQueryContext(AttributesScope.Core));
+
+            
         }
     }
 }
