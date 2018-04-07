@@ -160,5 +160,23 @@ namespace ConsoleVsts
 
             var t = await client.UpdateWorkItemAsync(patchDocument, id);
         }
+
+        public async Task AddComment(int id)
+        {
+            var client = GetClient<WorkItemTrackingHttpClient>();
+
+            var patchDocument = new JsonPatchDocument();
+
+            patchDocument.Add(
+                new JsonPatchOperation()
+                {
+                    Operation = Operation.Add,
+                    Path = "/fields/System.History",
+                    Value = "Comment at " + DateTime.Now.ToShortTimeString()
+                }
+            );
+
+            var t = await client.UpdateWorkItemAsync(patchDocument, id);
+        }
     }
 }
