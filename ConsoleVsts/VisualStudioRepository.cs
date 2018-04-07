@@ -96,7 +96,7 @@ namespace ConsoleVsts
 
             var result = await client.QueryByWiqlAsync(wiql);
         }
-        
+
         public async Task AddItemRelationAsync(int parentId, string vstsAccount, string project, string personalAccessToken)
         {
             var parent = await GetItemAsync(parentId, vstsAccount, project, personalAccessToken);
@@ -122,7 +122,8 @@ namespace ConsoleVsts
                 {
                     Operation = Operation.Add,
                     Path = "/relations/-",
-                    Value = new {
+                    Value = new
+                    {
                         rel = "System.LinkTypes.Hierarchy-Reverse",
                         url = parentUrl
                     }
@@ -131,6 +132,33 @@ namespace ConsoleVsts
 
             string workType = "Task";
             var t = await client.CreateWorkItemAsync(patchDocument, project, workType);
+        }
+        
+        public async Task UpdateItemAsync(int id, string vstsAccount, string project, string personalAccessToken)
+        {
+            var accountUri = new Uri(vstsAccount);
+            var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
+
+            var client = connection.GetClient<WorkItemTrackingHttpClient>();
+
+            var patchDocument = new JsonPatchDocument();
+
+            patchDocument.Add(
+                //new JsonPatchOperation()
+                //{
+                //    Operation = Operation.Add,
+                //    Path = "/fields/System.Title",
+                //    Value = "Updated task"
+                //}
+                new JsonPatchOperation()
+                {
+                    Operation = Operation.Add,
+                    Path = "/fields/System.State",
+                    Value = "Closed"
+                }
+            );
+
+            var t = await client.UpdateWorkItemAsync(patchDocument, id);
         }
     }
 }
