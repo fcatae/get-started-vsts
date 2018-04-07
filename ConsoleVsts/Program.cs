@@ -27,8 +27,11 @@ namespace ConsoleVsts
 
             //vsts.GetItemTemplate().Wait();
 
-            vsts.GetCurrentProfile().Wait();
-            
+            //vsts.GetCurrentProfile().Wait();
+
+            //vsts.GetUser().Wait();
+
+            vsts.GetAuthenticatedUser().Wait();
         }
     }
 }

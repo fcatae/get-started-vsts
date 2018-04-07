@@ -23,7 +23,7 @@ namespace ConsoleVsts
         {
             var accountUri = new Uri(vstsAccount);
             var connection = new VssConnection(accountUri, new VssBasicCredential(string.Empty, personalAccessToken));
-
+            
             this._project = project;
             this._connection = connection;
         }
@@ -196,11 +196,23 @@ namespace ConsoleVsts
             var name = await client.GetDisplayNameAsync(null);
             //var avatar = await client.GetAvatarAsync(AvatarSize.Large);
             //System.IO.File.WriteAllBytes("ex.png", avatar.Value);
-            await client.
+            
             var attrib = await client.GetAttributesAsync(new AttributesQueryContext(AttributesScope.Core));
             var profile = await client.GetProfileAsync(new ProfileQueryContext(AttributesScope.Core));
-
-            
         }
+
+        public async Task GetAuthenticatedUser()
+        {
+            var connection = _connection;
+
+            await connection.ConnectAsync();
+
+            var auth = connection.AuthorizedIdentity;
+
+            var id = auth.Descriptor.Identifier;
+            var account = auth.Properties.GetValue("account", "");
+            var claimType = auth.Descriptor.IdentityType;
+        }
+
     }
 }
