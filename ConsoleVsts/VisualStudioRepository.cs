@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
@@ -81,6 +82,8 @@ namespace ConsoleVsts
 
             var rels = await client.GetRelationTypesAsync();
             var cats = await client.GetWorkItemTypeCategoriesAsync(_project);
+
+            var catNames = cats.SelectMany(c => c.WorkItemTypes).Select(n => n.Name);
         }
 
         public async Task QueryItemsAsync()

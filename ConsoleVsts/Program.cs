@@ -16,11 +16,12 @@ namespace ConsoleVsts
 
             //vsts.AddItemRelationAsync(1).Wait();
 
-            //vsts.DiscoverTypesAsync().Wait();
+            vsts.DiscoverTypesAsync().Wait();
+            vsts.GetItemAsync(223265).Wait();
 
             //vsts.QueryItemsAsync().Wait();
 
-            vsts.UpdateItemAsync(2).Wait();
+            //vsts.UpdateItemAsync(2).Wait();
         }
     }
 }
