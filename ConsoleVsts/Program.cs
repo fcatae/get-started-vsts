@@ -10,6 +10,8 @@ namespace ConsoleVsts
 
             var vsts = new VisualStudioRepository();
 
+            vsts.CreateAsync(args[0], args[1], args[2]).Wait();
+
             vsts.GetItemAsync(1, args[0], args[1], args[2]).Wait();
         }
     }

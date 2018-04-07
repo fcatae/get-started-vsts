@@ -30,9 +30,18 @@ namespace ConsoleVsts
                     Value = "meu titulo"
                 }
             );
+            patchDocument.Add(
+                new JsonPatchOperation()
+                {
+                    Operation = Operation.Add,
+                    Path = "/fields/System.AssignedTo",
+                    Value = "fcatae@microsoft.com"
+                }
+            );
 
-            string workType = "Task";
-            await client.CreateWorkItemAsync(patchDocument, project, workType);
+
+            string workType = "Bug";
+            var t = await client.CreateWorkItemAsync(patchDocument, project, workType);
         }
 
         public async Task GetItemAsync(int id, string vstsAccount, string project, string personalAccessToken)
