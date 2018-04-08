@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using Microsoft.VisualStudio.Services.Profile;
 using Microsoft.VisualStudio.Services.Profile.Client;
+using Microsoft.TeamFoundation.Core.WebApi;
 
 namespace ConsoleVsts
 {
@@ -212,6 +213,17 @@ namespace ConsoleVsts
             var id = auth.Descriptor.Identifier;
             var account = auth.Properties.GetValue("account", "");
             var claimType = auth.Descriptor.IdentityType;
+        }
+
+
+        public async Task GetTagsAsync()
+        {
+            var projClient = GetClient<ProjectHttpClient>();
+            var projId = (await projClient.GetProject(_project)).Id;
+
+            var client = GetClient<TaggingHttpClient>();
+
+            var tags = await client.GetTagsAsync(projId);            
         }
 
     }
