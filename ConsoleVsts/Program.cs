@@ -17,7 +17,15 @@ namespace ConsoleVsts
             //vsts.AddItemRelationAsync(1).Wait();
 
             //vsts.DiscoverTypesAsync().Wait();
-            //vsts.GetItemAsync(223265).Wait();
+
+            vsts.DiscoverTypesAsync().Wait();
+
+            vsts.GetTagsAsync().Wait();
+            vsts.GetItemDefinitionAsync("Activity").Wait();
+
+            vsts.GetItemAsync(957906).Wait();
+            vsts.GetItemAsync(957903).Wait();
+            vsts.GetItemTemplate("Activity").Wait();
 
             //vsts.QueryItemsAsync().Wait();
 

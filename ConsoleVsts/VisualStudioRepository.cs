@@ -63,6 +63,13 @@ namespace ConsoleVsts
             var t = await client.CreateWorkItemAsync(patchDocument, _project, workType);
         }
 
+        public async Task GetItemDefinitionAsync(string workType)
+        {
+            var client = GetClient<WorkItemTrackingHttpClient>();
+
+            var t = await client.GetWorkItemTypeAsync(_project, workType);
+        }
+
         public async Task<WorkItem> GetItemAsync(int id)
         {
             var client = GetClient<WorkItemTrackingHttpClient>();
