@@ -18,6 +18,7 @@ namespace ConsoleVsts
 
             //vsts.DiscoverTypesAsync().Wait();
 
+            vsts.GetFields().Wait();
             vsts.DiscoverTypesAsync().Wait();
 
             vsts.GetTagsAsync().Wait();

@@ -233,5 +233,30 @@ namespace ConsoleVsts
             var tags = await client.GetTagsAsync(projId);            
         }
 
+        public async Task GetFields()
+        {
+            var client = GetClient<WorkItemTrackingHttpClient>();
+
+            var areas = await client.GetClassificationNodeAsync(_project, TreeStructureGroup.Areas, depth: 100 );
+            ShowNodeTree(areas);
+
+            var a = await client.GetFieldAsync("System.AreaPath");
+
+            var f = await client.GetFieldsAsync();
+        }
+
+        private void ShowNodeTree(WorkItemClassificationNode node, string path = "")
+        {
+            path = path + "/" + node.Name;
+            Console.WriteLine(path);
+
+            if (node.Children != null)
+            {
+                foreach (var child in node.Children)
+                {
+                    ShowNodeTree(child, path);
+                }
+            }
+        }
     }
 }
