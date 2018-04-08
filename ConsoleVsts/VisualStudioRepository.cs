@@ -182,11 +182,11 @@ namespace ConsoleVsts
         }
 
 
-        public async Task GetItemTemplate()
+        public async Task GetItemTemplate(string template)
         {
             var client = GetClient<WorkItemTrackingHttpClient>();
 
-            var t = await client.GetWorkItemTemplateAsync(_project, "Task");
+            var t = await client.GetWorkItemTemplateAsync(_project, template);
         }
 
         public async Task GetCurrentProfile()
