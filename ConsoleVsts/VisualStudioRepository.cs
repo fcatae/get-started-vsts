@@ -79,11 +79,54 @@ namespace ConsoleVsts
             return t;
         }
 
-        public async Task GetDeepItemAsync(int id)
+        public async Task<WorkItem> GetDeepItemAsync(int id)
         {
             var client = GetClient<WorkItemTrackingHttpClient>();
 
             var t = await client.GetWorkItemAsync(id, expand: WorkItemExpand.Relations);
+            
+            return t;
+        }
+
+        public async Task<VsTaskItem[]> GetChildItemsAsync(int id)
+        {
+            var client = GetClient<WorkItemTrackingHttpClient>();
+
+            var queryChild = new Wiql
+            {
+                Query = $"SELECT [System.Id] FROM WorkItemLinks" +
+                          $"  WHERE ([System.Links.LinkType] = 'System.LinkTypes.Hierarchy-Forward') " +
+                          $"  AND ([Source.Id] = {id})" +
+                          $"  ORDER BY [System.Id]"
+            };
+            
+            var results = await client.QueryByWiqlAsync(queryChild, _project);
+
+            var resultIds = results.WorkItemRelations
+                                .Where(w => w.Rel != null)
+                                .Select(w => w.Target.Id);
+
+            var fields = new string[] {
+                "System.Id",
+                "System.Title",
+                "System.State",
+                "System.AssignedTo",
+                "CSEngineering.ActivityStartDate",
+                "CSEngineering.ActivityDuration"
+            };
+
+            var childItemsAll = await client.GetWorkItemsAsync(resultIds);
+            var childItems = await client.GetWorkItemsAsync(resultIds, fields);
+
+            return childItems.Select(t => new VsTaskItem
+            {
+                Id = (int)t.Id,
+                Title = (string)t.Fields["System.Title"],
+                State = (string)t.Fields["System.State"],
+                AssignedTo = (string)t.Fields["System.AssignedTo"],
+                StartDate = (DateTime?)t.Fields["CSEngineering.ActivityStartDate"],
+                Duration = (float)(double)t.Fields["CSEngineering.ActivityDuration"]
+            }).ToArray();
         }
 
         public async Task DiscoverTypesAsync()

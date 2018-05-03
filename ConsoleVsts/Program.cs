@@ -9,9 +9,13 @@ namespace ConsoleVsts
         {
             Console.WriteLine("Hello World!");
 
-            var vsts = new VisualStudioRepository(args[0], args[1], args[2]);
+            string vstsAccount = args[0]; // eg, 'https://<site>.visualstudio.com'
+            string vstsProject = args[1]; // eg, 'test'
+            string vstsToken = args[2]; // eg, '<token_base64>'
 
-            vsts.GetDeepItemAsync(397583).Wait();
+            var devMeetings = new DevMeetingMgr(vstsAccount, vstsProject, vstsToken);
+
+            devMeetings.ListMeetingsAsync().Wait();
         }
 
         static void Main2(string[] args)
