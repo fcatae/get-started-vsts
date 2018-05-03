@@ -4,7 +4,17 @@ namespace ConsoleVsts
 {
     class Program
     {
+
         static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+
+            var vsts = new VisualStudioRepository(args[0], args[1], args[2]);
+
+            vsts.GetDeepItemAsync(397583).Wait();
+        }
+
+        static void Main2(string[] args)
         {
             Console.WriteLine("Hello World!");
 
